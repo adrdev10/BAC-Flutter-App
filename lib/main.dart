@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -66,6 +67,12 @@ class _BackFormState extends State<BacHomeScreen> {
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: TextFormField(
+                  autovalidate: true,
+                  validator: (str) {
+                    return str == null
+                        ? 'Must type something before procceding!'
+                        : null;
+                  },
                   controller: _namecontroller,
                   decoration: InputDecoration(
                     labelText: 'Enter your name',
@@ -76,6 +83,13 @@ class _BackFormState extends State<BacHomeScreen> {
               Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: TextFormField(
+                  autovalidate: true,
+                  validator: (str) {
+                    return str == null
+                        ? 'Must type something before procceding!'
+                        : null;
+                  },
+                  inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                   controller: _weightcontroller,
                   decoration: InputDecoration(
                     labelText: 'Enter your weight (pounds)',
@@ -85,7 +99,14 @@ class _BackFormState extends State<BacHomeScreen> {
               Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: TextFormField(
+                  autovalidate: true,
+                  validator: (str) {
+                    return str == null
+                        ? 'Must type something before procceding!'
+                        : null;
+                  },
                   controller: _agecontroller,
+                  inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                   decoration: InputDecoration(
                     labelText: 'Enter amount of drinks',
                   ),
@@ -103,15 +124,22 @@ class _BackFormState extends State<BacHomeScreen> {
                   child: FloatingActionButton(
                     child: Icon(Icons.chevron_right),
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => BackResultsScreen(
-                                    age: int.parse(_agecontroller.text),
-                                    name: _namecontroller.text,
-                                    weight:
-                                        double.parse(_weightcontroller.text),
-                                  )));
+                      if (_namecontroller.text == '' ||
+                          _agecontroller.text == '' ||
+                          _weightcontroller.text == '') {
+
+                            return null;
+                      } else {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => BackResultsScreen(
+                                      age: int.parse(_agecontroller.text),
+                                      name: _namecontroller.text,
+                                      weight:
+                                          double.parse(_weightcontroller.text),
+                                    )));
+                      }
                     },
                   ))
             ],
@@ -157,15 +185,15 @@ class BackResultsScreen extends StatelessWidget {
                     ),
                   ),
                   Positioned(
-                    bottom: 150,
+                      bottom: 150,
                       child: Container(
-                    child: Text(
-                      _getBac(weight, 4).toStringAsPrecision(3),
-                      style: TextStyle(
-                        fontSize: 80.0,
-                      ),
-                    ),
-                  ))
+                        child: Text(
+                          _getBac(weight, age).toStringAsFixed(3),
+                          style: TextStyle(
+                            fontSize: 80.0,
+                          ),
+                        ),
+                      ))
                 ],
               ),
             )));
