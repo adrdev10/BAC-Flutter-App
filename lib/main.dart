@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -127,8 +129,7 @@ class _BackFormState extends State<BacHomeScreen> {
                       if (_namecontroller.text == '' ||
                           _agecontroller.text == '' ||
                           _weightcontroller.text == '') {
-
-                            return null;
+                        return null;
                       } else {
                         Navigator.push(
                             context,
@@ -155,8 +156,22 @@ class BackResultsScreen extends StatelessWidget {
   final double weight;
   final int age;
 
-  double _getBac(double weight, int amountofDrinks) {
-    return (600 * amountofDrinks) / (weight * (0.06 * amountofDrinks + 169));
+  String _getBac(double weight, int amountofDrinks) {
+    var bac = ((600 * amountofDrinks) / (weight * (0.06 * amountofDrinks + 169)));
+    return bac.toStringAsFixed(3);
+  }
+
+  Widget _buildChild(String bac) {
+    var bacToDouble = double.parse(bac);
+    if(bacToDouble > 0.08) {
+      return Image.asset(
+              'assets/images/dontdrive.png',
+              width: 100.0,
+              height: 200.0,
+              fit: BoxFit.fill,
+            );
+    }
+    return null;
   }
 
   @override
@@ -168,7 +183,7 @@ class BackResultsScreen extends StatelessWidget {
           title: Text(name),
         ),
         body: Container(
-            height: 350.0,
+            height: 450.0,
             child: Center(
               child: Stack(
                 alignment: Alignment.center,
@@ -185,15 +200,26 @@ class BackResultsScreen extends StatelessWidget {
                     ),
                   ),
                   Positioned(
-                      bottom: 150,
+                      bottom: 280,
                       child: Container(
                         child: Text(
-                          _getBac(weight, age).toStringAsFixed(3),
+                          _getBac(weight, age),
                           style: TextStyle(
                             fontSize: 80.0,
                           ),
                         ),
-                      ))
+                      )),
+                  Stack(
+                    alignment: Alignment.center,
+                    children: <Widget>[
+                      Positioned(
+                          bottom: 40,
+                          child: Container(
+                            height: 140,
+                            child: _buildChild(_getBac(weight, age)),
+                          ))
+                    ],
+                  )
                 ],
               ),
             )));

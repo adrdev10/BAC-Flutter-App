@@ -1,4 +1,4 @@
-package com.example.baccalculator;
+package com.adrian.baccalculator;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
