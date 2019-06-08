@@ -74,12 +74,6 @@ class _BackFormState extends State<BacHomeScreen> {
         ));
   }
 
-  Widget dahedOutline() {
-    return Container(
-      height: 200.0,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -173,10 +167,41 @@ class BackResultsScreen extends StatelessWidget {
     return bac.toStringAsFixed(3);
   }
 
+  void _showDialog(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Rewind and remember'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('In every state of the united State it is illegal to drive with a BAC of 0.08 or higher.'),
+                Text('Remember that this value is a close approximation. Do not drive under the influence of alcohol.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    final userArgument = ModalRoute.of(context).settings.arguments;
+    
+    Future.delayed(Duration.zero, () => _showDialog(context));
+
     return Scaffold(
         appBar: AppBar(
           title: Text(name),
@@ -263,19 +288,22 @@ class BackResultsScreen extends StatelessWidget {
                     ListTile(
                       contentPadding: const EdgeInsets.all(12.0),
                       leading: Icon(Icons.blur_circular),
-                      title: Text('Altered Emotions and Behavior\n Relaxation feelings\n  Mild Sedetation'),
+                      title: Text(
+                          'Altered Emotions and Behavior\n Relaxation feelings\n  Mild Sedetation'),
                       trailing: Text('0.08'),
                     ),
                     ListTile(
                       contentPadding: const EdgeInsets.all(12.0),
                       leading: Icon(Icons.blur_circular),
-                      title: Text('Muscle and speech impaired\n Reduced sensitivity\n'),
+                      title: Text(
+                          'Muscle and speech impaired\n Reduced sensitivity\n'),
                       trailing: Text('0.12'),
                     ),
                     ListTile(
                       contentPadding: const EdgeInsets.all(12.0),
                       leading: Icon(Icons.blur_circular),
-                      title: Text('Mental Functions Affected\n Difficulty Standing, Walking\n  Euphoria'),
+                      title: Text(
+                          'Mental Functions Affected\n Difficulty Standing, Walking\n  Euphoria'),
                       trailing: Text('0.15'),
                     ),
                     ListTile(
