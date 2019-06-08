@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 
 void main() {
+  FirebaseAdMob.instance.initialize(appId: 'ca-app-pub-1975185434500098~6499891872');
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     initialRoute: '/',
@@ -76,6 +78,11 @@ class _BackFormState extends State<BacHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+      myBanner..load()..show(// Positions the banner ad 60 pixels from the bottom of the screen
+                          anchorOffset: 60.0,
+                          // Banner Position
+                          anchorType: AnchorType.bottom,
+                          );
     // TODO: implement build
     return Scaffold(
         appBar: AppBar(
@@ -177,8 +184,10 @@ class BackResultsScreen extends StatelessWidget {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('In every state of the united State it is illegal to drive with a BAC of 0.08 or higher.'),
-                Text('Remember that this value is a close approximation. Do not drive under the influence of alcohol.'),
+                Text(
+                    'In every state of the united State it is illegal to drive with a BAC of 0.08 or higher.'),
+                Text(
+                    'Remember that this value is a close approximation. Do not drive under the influence of alcohol.'),
               ],
             ),
           ),
@@ -195,13 +204,11 @@ class BackResultsScreen extends StatelessWidget {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    
-    Future.delayed(Duration.zero, () => _showDialog(context));
 
+    Future.delayed(Duration.zero, () => _showDialog(context));
     return Scaffold(
         appBar: AppBar(
           title: Text(name),
@@ -328,3 +335,26 @@ class BackSettingsScreen extends StatelessWidget {
     return null;
   }
 }
+
+MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+  keywords: <String>['health', 'games'],
+  contentUrl: 'https://flutter.io',
+  birthday: DateTime.now(),
+  childDirected: false,
+  designedForFamilies: false,
+  gender:
+      MobileAdGender.male, // or MobileAdGender.female, MobileAdGender.unknown
+  testDevices: <String>[], // Android emulators are considered test devices
+);
+
+BannerAd myBanner = BannerAd(
+  // Replace the testAdUnitId with an ad unit id from the AdMob dash.
+  // https://developers.google.com/admob/android/test-ads
+  // https://developers.google.com/admob/ios/test-ads
+  adUnitId: 'ca-app-pub-1975185434500098/2490873415',
+  size: AdSize.smartBanner,
+  targetingInfo: targetingInfo,
+  listener: (MobileAdEvent event) {
+    print("BannerAd event is $event");
+  },
+);
