@@ -1,12 +1,29 @@
 import 'dart:io';
+import 'dart:math';
 
+import 'package:baccalculator/localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_admob/firebase_admob.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
-  FirebaseAdMob.instance.initialize(appId: 'ca-app-pub-1975185434500098~6499891872');
+  FirebaseAdMob.instance
+      .initialize(appId: 'ca-app-pub-1975185434500098~6499891872');
   runApp(MaterialApp(
+    localizationsDelegates: [
+      // ... app-specific localization delegate[s] here
+      const AppLocalizationDelegate(),
+      GlobalMaterialLocalizations.delegate,
+      GlobalWidgetsLocalizations.delegate,
+    ],
+    supportedLocales: [
+      const Locale('en', ''), // English
+      const Locale('es', ''), // Spanish
+      const Locale.fromSubtags(
+          languageCode: 'zh'), // Chinese *See Advanced Locales below*
+      // ... other locales the app supports
+    ],
     debugShowCheckedModeBanner: false,
     initialRoute: '/',
     routes: {
@@ -78,12 +95,10 @@ class _BackFormState extends State<BacHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-      myBanner..load()..show(// Positions the banner ad 60 pixels from the bottom of the screen
-                          anchorOffset: 60.0,
-                          // Banner Position
-                          anchorType: AnchorType.bottom,
-                          );
+    // myBanner..load()..show();
     // TODO: implement build
+    Locale myLocale = Localizations.localeOf(context);
+    print(myLocale.countryCode);
     return Scaffold(
         appBar: AppBar(
           title: const Text(
@@ -110,12 +125,12 @@ class _BackFormState extends State<BacHomeScreen> {
                   autovalidate: true,
                   validator: (str) {
                     return str == null
-                        ? 'Must type something before procceding!'
+                        ? AppLocalization.of(context).get('warning')
                         : null;
                   },
                   controller: _namecontroller,
                   decoration: InputDecoration(
-                    labelText: 'Enter your name',
+                    labelText:  AppLocalization.of(context).get('name'),
                     icon: Icon(Icons.person),
                   ),
                 ),
@@ -126,13 +141,13 @@ class _BackFormState extends State<BacHomeScreen> {
                   autovalidate: true,
                   validator: (str) {
                     return str == null
-                        ? 'Must type something before procceding!'
+                        ?  AppLocalization.of(context).get('warning')
                         : null;
                   },
                   inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                   controller: _weightcontroller,
                   decoration: InputDecoration(
-                    labelText: 'Enter your weight (pounds)',
+                    labelText:  AppLocalization.of(context).get('weight'),
                     icon: Icon(Icons.account_balance_wallet),
                   ),
                 ),
@@ -143,13 +158,13 @@ class _BackFormState extends State<BacHomeScreen> {
                   autovalidate: true,
                   validator: (str) {
                     return str == null
-                        ? 'Must type something before procceding!'
+                        ?  AppLocalization.of(context).get('warning')
                         : null;
                   },
                   controller: _agecontroller,
                   inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                   decoration: InputDecoration(
-                    labelText: 'Enter number of cups you had',
+                    labelText:  AppLocalization.of(context).get('drinks'),
                     icon: Icon(Icons.local_drink),
                   ),
                 ),
@@ -185,9 +200,9 @@ class BackResultsScreen extends StatelessWidget {
             child: ListBody(
               children: <Widget>[
                 Text(
-                    'In every state of the united State it is illegal to drive with a BAC of 0.08 or higher.'),
+                    AppLocalization.of(context).get('message')),
                 Text(
-                    'Remember that this value is a close approximation. Do not drive under the influence of alcohol.'),
+                    AppLocalization.of(context).get('message2')),
               ],
             ),
           ),
@@ -208,6 +223,8 @@ class BackResultsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
 
+    var bac = _getBac(weight, age);
+
     Future.delayed(Duration.zero, () => _showDialog(context));
     return Scaffold(
         appBar: AppBar(
@@ -224,16 +241,18 @@ class BackResultsScreen extends StatelessWidget {
                     children: <Widget>[
                       Positioned(
                         top: 30,
+                        left: 10,
                         child: Container(
                           child: Text(
-                            'Blood Alcohol Concentration',
+                            AppLocalization.of(context).get('title'),
                             style: TextStyle(
-                                fontSize: 20.0, fontWeight: FontWeight.w200),
+                                fontSize: 15.0, fontWeight: FontWeight.w200),
                           ),
                         ),
                       ),
                       Positioned(
                           bottom: 25,
+                          left: 25,
                           child: Container(
                             child: Text(
                               _getBac(weight, age),
@@ -241,16 +260,27 @@ class BackResultsScreen extends StatelessWidget {
                                   fontSize: 45.0, fontWeight: FontWeight.w300),
                             ),
                           )),
-                      Stack(
-                        alignment: Alignment.center,
-                        children: <Widget>[
-                          Positioned(
-                              bottom: 40,
-                              child: Container(
-                                height: 140,
-                              ))
-                        ],
-                      )
+                      Positioned(
+                        top: 30,
+                        right: 10,
+                        child: Container(
+                          child: Text(
+                            AppLocalization.of(context).get('hours'),
+                            style: TextStyle(
+                                fontSize: 15.0, fontWeight: FontWeight.w200),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                          bottom: 25,
+                          right: 50,
+                          child: Container(
+                            child: Text(
+                              (double.parse(bac) / 0.015).toStringAsFixed(2),
+                              style: TextStyle(
+                                  fontSize: 45.0, fontWeight: FontWeight.w300),
+                            ),
+                          )),
                     ],
                   ),
                 )),
@@ -289,34 +319,34 @@ class BackResultsScreen extends StatelessWidget {
                     ListTile(
                       contentPadding: const EdgeInsets.all(12.0),
                       leading: Icon(Icons.blur_circular),
-                      title: Text('Reduced Sensitivity\n Well Being'),
+                      title: Text( AppLocalization.of(context).get('list1')),
                       trailing: Text('0.05'),
                     ),
                     ListTile(
                       contentPadding: const EdgeInsets.all(12.0),
                       leading: Icon(Icons.blur_circular),
                       title: Text(
-                          'Altered Emotions and Behavior\n Relaxation feelings\n  Mild Sedetation'),
+                           AppLocalization.of(context).get('list2')),
                       trailing: Text('0.08'),
                     ),
                     ListTile(
                       contentPadding: const EdgeInsets.all(12.0),
                       leading: Icon(Icons.blur_circular),
                       title: Text(
-                          'Muscle and speech impaired\n Reduced sensitivity\n'),
+                          AppLocalization.of(context).get('list3')),
                       trailing: Text('0.12'),
                     ),
                     ListTile(
                       contentPadding: const EdgeInsets.all(12.0),
                       leading: Icon(Icons.blur_circular),
                       title: Text(
-                          'Mental Functions Affected\n Difficulty Standing, Walking\n  Euphoria'),
+                          AppLocalization.of(context).get('list4')),
                       trailing: Text('0.15'),
                     ),
                     ListTile(
                       contentPadding: const EdgeInsets.all(12.0),
                       leading: Icon(Icons.blur_circular),
-                      title: Text('Lethal Dosage\n alcohol poisoning\n'),
+                      title: Text(AppLocalization.of(context).get('list5')),
                       trailing: Text('0.35'),
                     ),
                   ],
