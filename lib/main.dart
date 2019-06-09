@@ -9,24 +9,8 @@ import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-// class SplashScreen extends StatefulWidget {
-//   @override
-//   _SplashScreenState createState() => _SplashScreenState();
-// }
-
-// class _SplashScreenState extends State<SplashScreen> {
-//   @override
-//   void initState() {
-//     super.initState();
-//     Timer(
-//         Duration(seconds: 3),
-//         () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-//             builder: (BuildContext context) => BacHomeScreen())));
-//   }
-
 void main() {
-  FirebaseAdMob.instance
-      .initialize(appId: 'ca-app-pub-1975185434500098~6499891872');
+  FirebaseAdMob.instance.initialize(appId: 'ca-app-pub-1975185434500098~6499891872');
   runApp(MaterialApp(
     localizationsDelegates: [
       // ... app-specific localization delegate[s] here
@@ -45,7 +29,7 @@ void main() {
     initialRoute: '/',
     routes: {
       '/': (context) => BacHomeScreen(),
-      '/second': (context) => BackResultsScreen(),
+      // '/second': (context) => BackResultsScreen(),
       '/settings': (context) => BackSettingsScreen(),
     },
   ));
@@ -81,10 +65,10 @@ class _BackFormState extends State<BacHomeScreen> {
 
   Widget bigColorfulBox() {
     return Container(
-        height: 32.0,
-        width: 90.0,
+        height: 35.0,
+        width: 100.0,
         padding: const EdgeInsets.all(5.0),
-        margin: EdgeInsets.only(top: 20.0),
+        margin: EdgeInsets.only(top: 30.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5.0),
           color: Colors.blue[500],
@@ -116,7 +100,7 @@ class _BackFormState extends State<BacHomeScreen> {
       ..load()
       ..show(
         anchorType: AnchorType.bottom,
-        anchorOffset: 30.0,
+        anchorOffset: 0.0,
       );
     // TODO: implement build
     Locale myLocale = Localizations.localeOf(context);
@@ -212,7 +196,7 @@ class BackResultsScreen extends StatelessWidget {
   }
 
   _launchURLUber() async {
-    const url = 'https://m.uber.com/looking';
+    const url = 'https://auth.uber.com/login/session';
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -221,8 +205,7 @@ class BackResultsScreen extends StatelessWidget {
   }
 
   _launchURLLift() async {
-    const url =
-        'https://account.lyft.com/auth?next=https%3A%2F%2Fwww.lyft.com%2Flogin%2Fjump';
+    const url = 'https://www.lyft.com/rider';
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -263,6 +246,12 @@ class BackResultsScreen extends StatelessWidget {
     // TODO: implement build
 
     var bac = _getBac(weight, age);
+    myInterstitial
+      ..load()
+      ..show(
+        anchorType: AnchorType.bottom,
+        anchorOffset: 0.0,
+      );
 
     Future.delayed(Duration.zero, () => _showDialog(context));
     return Scaffold(
@@ -272,8 +261,8 @@ class BackResultsScreen extends StatelessWidget {
         body: Column(
           children: <Widget>[
             Container(
-                width: 440.0,
-                height: 190.0,
+                width: double.infinity,
+                height: 180.0,
                 child: Center(
                   child: Stack(
                     alignment: Alignment.center,
@@ -303,6 +292,7 @@ class BackResultsScreen extends StatelessWidget {
                               Container(
                                 // top: 30,
                                 // right: 10,
+                                padding: const EdgeInsets.all(2.0),
                                 child: Container(
                                   child: Text(
                                     AppLocalization.of(context).get('hours'),
@@ -350,10 +340,13 @@ class BackResultsScreen extends StatelessWidget {
                             children: <Widget>[
                               Container(
                                 margin:
-                                    const EdgeInsets.only(top: 19.0, left: 8.0),
+                                    const EdgeInsets.only(top: 35.0, left: 8.0),
                                 child: Align(
                                   alignment: Alignment(0.0, 1.5),
                                   child: FloatingActionButton(
+                                    heroTag: "btn2",
+                                    backgroundColor:
+                                        Color.fromRGBO(0, 0, 0, 100),
                                     tooltip: 'Uber',
                                     child: Icon(Icons.directions_car),
                                     onPressed: _launchURLUber,
@@ -362,11 +355,14 @@ class BackResultsScreen extends StatelessWidget {
                               ),
                               Container(
                                 margin:
-                                    const EdgeInsets.only(top: 19.0, left: 8.0),
+                                    const EdgeInsets.only(top: 35.0, left: 8.0),
                                 child: Align(
                                   alignment: Alignment(0.0, 1.5),
                                   child: FloatingActionButton(
-                                    tooltip: 'Uber',
+                                    heroTag: "btn1",
+                                    backgroundColor:
+                                        Color.fromRGBO(145, 58, 127, 100),
+                                    tooltip: 'Lift',
                                     child: Icon(Icons.directions_car),
                                     onPressed: _launchURLLift,
                                   ),
@@ -381,7 +377,7 @@ class BackResultsScreen extends StatelessWidget {
                 )),
             Expanded(
               child: Container(
-                width: 800.0,
+                width: double.infinity,
                 margin: const EdgeInsets.only(top: 30.0),
                 decoration: BoxDecoration(
                     gradient: LinearGradient(
@@ -409,7 +405,7 @@ class BackResultsScreen extends StatelessWidget {
                       )
                     ]),
                 child: ListView(
-                  padding: const EdgeInsets.all(15.0),
+                  padding: const EdgeInsets.all(10.0),
                   children: <Widget>[
                     ListTile(
                       contentPadding: const EdgeInsets.all(12.0),
@@ -459,13 +455,24 @@ class BackSettingsScreen extends StatelessWidget {
 }
 
 MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
-  keywords: <String>['health', 'games'],
+  keywords: <String>[
+    'health',
+    'games',
+    'sport',
+    'drinks',
+    'fun',
+    'drive',
+    'night',
+    'nobeer',
+    'calculator',
+    'bac'
+  ],
   contentUrl: 'https://flutter.io',
   birthday: DateTime.now(),
   childDirected: false,
   designedForFamilies: false,
-  gender:
-      MobileAdGender.male, // or MobileAdGender.female, MobileAdGender.unknown
+  gender: MobileAdGender
+      .unknown, // or MobileAdGender.female, MobileAdGender.unknown
   testDevices: <String>[], // Android emulators are considered test devices
 );
 
@@ -478,5 +485,16 @@ BannerAd myBanner = BannerAd(
   targetingInfo: targetingInfo,
   listener: (MobileAdEvent event) {
     print("BannerAd event is $event");
+  },
+);
+
+InterstitialAd myInterstitial = InterstitialAd(
+  // Replace the testAdUnitId with an ad unit id from the AdMob dash.
+  // https://developers.google.com/admob/android/test-ads
+  // https://developers.google.com/admob/ios/test-ads
+  adUnitId: 'ca-app-pub-1975185434500098/1602788415',
+  targetingInfo: targetingInfo,
+  listener: (MobileAdEvent event) {
+    print("InterstitialAd event is $event");
   },
 );
