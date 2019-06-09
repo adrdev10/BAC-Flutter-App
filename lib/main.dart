@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
@@ -6,9 +7,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+// class SplashScreen extends StatefulWidget {
+//   @override
+//   _SplashScreenState createState() => _SplashScreenState();
+// }
+
+// class _SplashScreenState extends State<SplashScreen> {
+//   @override
+//   void initState() {
+//     super.initState();
+//     Timer(
+//         Duration(seconds: 3),
+//         () => Navigator.of(context).pushReplacement(MaterialPageRoute(
+//             builder: (BuildContext context) => BacHomeScreen())));
+//   }
 
 void main() {
-  FirebaseAdMob.instance.initialize(appId: 'ca-app-pub-1975185434500098~6499891872');
+  FirebaseAdMob.instance
+      .initialize(appId: 'ca-app-pub-1975185434500098~6499891872');
   runApp(MaterialApp(
     localizationsDelegates: [
       // ... app-specific localization delegate[s] here
@@ -94,10 +112,12 @@ class _BackFormState extends State<BacHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    myBanner..load()..show(
-      anchorType: AnchorType.bottom,
-      anchorOffset: 30.0,
-    );
+    myBanner
+      ..load()
+      ..show(
+        anchorType: AnchorType.bottom,
+        anchorOffset: 30.0,
+      );
     // TODO: implement build
     Locale myLocale = Localizations.localeOf(context);
     print(myLocale.countryCode);
@@ -191,6 +211,25 @@ class BackResultsScreen extends StatelessWidget {
     return bac.toStringAsFixed(3);
   }
 
+  _launchURLUber() async {
+    const url = 'https://m.uber.com/looking';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  _launchURLLift() async {
+    const url =
+        'https://account.lyft.com/auth?next=https%3A%2F%2Fwww.lyft.com%2Flogin%2Fjump';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   void _showDialog(BuildContext context) {
     showDialog<void>(
       context: context,
@@ -234,10 +273,11 @@ class BackResultsScreen extends StatelessWidget {
           children: <Widget>[
             Container(
                 width: 440.0,
-                height: 150.0,
+                height: 190.0,
                 child: Center(
                   child: Stack(
-                    alignment: Alignment.bottomCenter,
+                    alignment: Alignment.center,
+                    overflow: Overflow.clip,
                     children: <Widget>[
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -250,7 +290,7 @@ class BackResultsScreen extends StatelessWidget {
                               Container(
                                 // top: 30,
                                 // left: 10,
-                                padding: const EdgeInsets.all(5.0),
+                                padding: const EdgeInsets.all(2.0),
                                 child: Container(
                                   child: Text(
                                     AppLocalization.of(context).get('title'),
@@ -280,28 +320,58 @@ class BackResultsScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: <Widget>[
                               Container(
-                                padding: const EdgeInsets.all(5.0),
-                                margin: const EdgeInsets.only(top: 10.0),
+                                  padding: const EdgeInsets.all(2.0),
+                                  margin: const EdgeInsets.only(top: 5.0),
                                   child: Container(
-                                child: Text(
-                                  _getBac(weight, age),
-                                  style: TextStyle(
-                                      fontSize: 45.0,
-                                      fontWeight: FontWeight.w300),
-                                ),
-                              )),
+                                    child: Text(
+                                      _getBac(weight, age),
+                                      style: TextStyle(
+                                          fontSize: 45.0,
+                                          fontWeight: FontWeight.w300),
+                                    ),
+                                  )),
                               Container(
-                                  padding: const EdgeInsets.all(5.0),
-                                  margin: const EdgeInsets.only(top: 10.0),
+                                  padding: const EdgeInsets.all(2.0),
+                                  margin: const EdgeInsets.only(top: 5.0),
                                   child: Container(
-                                child: Text(
-                                  (double.parse(bac) / 0.015)
-                                      .toStringAsFixed(2),
-                                  style: TextStyle(
-                                      fontSize: 45.0,
-                                      fontWeight: FontWeight.w300),
+                                    child: Text(
+                                      (double.parse(bac) / 0.015)
+                                          .toStringAsFixed(2),
+                                      style: TextStyle(
+                                          fontSize: 45.0,
+                                          fontWeight: FontWeight.w300),
+                                    ),
+                                  )),
+                            ],
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                margin:
+                                    const EdgeInsets.only(top: 19.0, left: 8.0),
+                                child: Align(
+                                  alignment: Alignment(0.0, 1.5),
+                                  child: FloatingActionButton(
+                                    tooltip: 'Uber',
+                                    child: Icon(Icons.directions_car),
+                                    onPressed: _launchURLUber,
+                                  ),
                                 ),
-                              )),
+                              ),
+                              Container(
+                                margin:
+                                    const EdgeInsets.only(top: 19.0, left: 8.0),
+                                child: Align(
+                                  alignment: Alignment(0.0, 1.5),
+                                  child: FloatingActionButton(
+                                    tooltip: 'Uber',
+                                    child: Icon(Icons.directions_car),
+                                    onPressed: _launchURLLift,
+                                  ),
+                                ),
+                              ),
                             ],
                           )
                         ],
@@ -374,7 +444,7 @@ class BackResultsScreen extends StatelessWidget {
                   ],
                 ),
               ),
-            )
+            ),
           ],
         ));
   }
