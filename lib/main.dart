@@ -8,8 +8,7 @@ import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
-  FirebaseAdMob.instance
-      .initialize(appId: 'ca-app-pub-1975185434500098~6499891872');
+  FirebaseAdMob.instance.initialize(appId: 'ca-app-pub-1975185434500098~6499891872');
   runApp(MaterialApp(
     localizationsDelegates: [
       // ... app-specific localization delegate[s] here
@@ -95,7 +94,10 @@ class _BackFormState extends State<BacHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // myBanner..load()..show();
+    myBanner..load()..show(
+      anchorType: AnchorType.bottom,
+      anchorOffset: 30.0,
+    );
     // TODO: implement build
     Locale myLocale = Localizations.localeOf(context);
     print(myLocale.countryCode);
@@ -130,7 +132,7 @@ class _BackFormState extends State<BacHomeScreen> {
                   },
                   controller: _namecontroller,
                   decoration: InputDecoration(
-                    labelText:  AppLocalization.of(context).get('name'),
+                    labelText: AppLocalization.of(context).get('name'),
                     icon: Icon(Icons.person),
                   ),
                 ),
@@ -141,13 +143,13 @@ class _BackFormState extends State<BacHomeScreen> {
                   autovalidate: true,
                   validator: (str) {
                     return str == null
-                        ?  AppLocalization.of(context).get('warning')
+                        ? AppLocalization.of(context).get('warning')
                         : null;
                   },
                   inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                   controller: _weightcontroller,
                   decoration: InputDecoration(
-                    labelText:  AppLocalization.of(context).get('weight'),
+                    labelText: AppLocalization.of(context).get('weight'),
                     icon: Icon(Icons.account_balance_wallet),
                   ),
                 ),
@@ -158,13 +160,13 @@ class _BackFormState extends State<BacHomeScreen> {
                   autovalidate: true,
                   validator: (str) {
                     return str == null
-                        ?  AppLocalization.of(context).get('warning')
+                        ? AppLocalization.of(context).get('warning')
                         : null;
                   },
                   controller: _agecontroller,
                   inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                   decoration: InputDecoration(
-                    labelText:  AppLocalization.of(context).get('drinks'),
+                    labelText: AppLocalization.of(context).get('drinks'),
                     icon: Icon(Icons.local_drink),
                   ),
                 ),
@@ -199,10 +201,8 @@ class BackResultsScreen extends StatelessWidget {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text(
-                    AppLocalization.of(context).get('message')),
-                Text(
-                    AppLocalization.of(context).get('message2')),
+                Text(AppLocalization.of(context).get('message')),
+                Text(AppLocalization.of(context).get('message2')),
               ],
             ),
           ),
@@ -237,50 +237,75 @@ class BackResultsScreen extends StatelessWidget {
                 height: 150.0,
                 child: Center(
                   child: Stack(
-                    alignment: Alignment.center,
+                    alignment: Alignment.bottomCenter,
                     children: <Widget>[
-                      Positioned(
-                        top: 30,
-                        left: 10,
-                        child: Container(
-                          child: Text(
-                            AppLocalization.of(context).get('title'),
-                            style: TextStyle(
-                                fontSize: 15.0, fontWeight: FontWeight.w200),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                // top: 30,
+                                // left: 10,
+                                padding: const EdgeInsets.all(5.0),
+                                child: Container(
+                                  child: Text(
+                                    AppLocalization.of(context).get('title'),
+                                    style: TextStyle(
+                                        fontSize: 15.0,
+                                        fontWeight: FontWeight.w200),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                // top: 30,
+                                // right: 10,
+                                child: Container(
+                                  child: Text(
+                                    AppLocalization.of(context).get('hours'),
+                                    style: TextStyle(
+                                        fontSize: 15.0,
+                                        fontWeight: FontWeight.w200),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: <Widget>[
+                              Container(
+                                padding: const EdgeInsets.all(5.0),
+                                margin: const EdgeInsets.only(top: 10.0),
+                                  child: Container(
+                                child: Text(
+                                  _getBac(weight, age),
+                                  style: TextStyle(
+                                      fontSize: 45.0,
+                                      fontWeight: FontWeight.w300),
+                                ),
+                              )),
+                              Container(
+                                  padding: const EdgeInsets.all(5.0),
+                                  margin: const EdgeInsets.only(top: 10.0),
+                                  child: Container(
+                                child: Text(
+                                  (double.parse(bac) / 0.015)
+                                      .toStringAsFixed(2),
+                                  style: TextStyle(
+                                      fontSize: 45.0,
+                                      fontWeight: FontWeight.w300),
+                                ),
+                              )),
+                            ],
+                          )
+                        ],
                       ),
-                      Positioned(
-                          bottom: 25,
-                          left: 25,
-                          child: Container(
-                            child: Text(
-                              _getBac(weight, age),
-                              style: TextStyle(
-                                  fontSize: 45.0, fontWeight: FontWeight.w300),
-                            ),
-                          )),
-                      Positioned(
-                        top: 30,
-                        right: 10,
-                        child: Container(
-                          child: Text(
-                            AppLocalization.of(context).get('hours'),
-                            style: TextStyle(
-                                fontSize: 15.0, fontWeight: FontWeight.w200),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                          bottom: 25,
-                          right: 50,
-                          child: Container(
-                            child: Text(
-                              (double.parse(bac) / 0.015).toStringAsFixed(2),
-                              style: TextStyle(
-                                  fontSize: 45.0, fontWeight: FontWeight.w300),
-                            ),
-                          )),
                     ],
                   ),
                 )),
@@ -319,28 +344,25 @@ class BackResultsScreen extends StatelessWidget {
                     ListTile(
                       contentPadding: const EdgeInsets.all(12.0),
                       leading: Icon(Icons.blur_circular),
-                      title: Text( AppLocalization.of(context).get('list1')),
+                      title: Text(AppLocalization.of(context).get('list1')),
                       trailing: Text('0.05'),
                     ),
                     ListTile(
                       contentPadding: const EdgeInsets.all(12.0),
                       leading: Icon(Icons.blur_circular),
-                      title: Text(
-                           AppLocalization.of(context).get('list2')),
+                      title: Text(AppLocalization.of(context).get('list2')),
                       trailing: Text('0.08'),
                     ),
                     ListTile(
                       contentPadding: const EdgeInsets.all(12.0),
                       leading: Icon(Icons.blur_circular),
-                      title: Text(
-                          AppLocalization.of(context).get('list3')),
+                      title: Text(AppLocalization.of(context).get('list3')),
                       trailing: Text('0.12'),
                     ),
                     ListTile(
                       contentPadding: const EdgeInsets.all(12.0),
                       leading: Icon(Icons.blur_circular),
-                      title: Text(
-                          AppLocalization.of(context).get('list4')),
+                      title: Text(AppLocalization.of(context).get('list4')),
                       trailing: Text('0.15'),
                     ),
                     ListTile(

@@ -34,7 +34,7 @@ class AppLocalization {
       'hours': 'Horas para que BAC alcance 0',
       'drinks': 'Entre el número de alcohol que tuvo',
       'message': 'En el Peru no es permitido mananejar con un BAC de 0.05 o mas.',
-      'message2': 'Recuerda que este valor es una aproximación cercana. No conduzca bajo la influencia del alcohol.',
+      'message2': 'Remember that this value is a close approximation. Do not drive under the influence of alcohol!',
       'warning': 'Debe escribir algo antes de proceder!',
       'list1': 'Sensibilidad reducida \n bienestar',
       'list2': 'Emociones y comportamientos alterados \n Sentimientos de relajación \n Seducción leve',
