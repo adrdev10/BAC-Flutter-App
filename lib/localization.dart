@@ -13,11 +13,11 @@ class AppLocalization {
 
   static Map<String, Map<String, String>> _localizedValues = {
     'en': {
-      'name': 'Enter your name',
+      'name': 'Name',
       'title': 'Blood Alcohol Concentration',
-      'weight': 'Enter your weight (pounds)',
+      'weight': 'Weight (pounds)',
       'hours': 'Hours for BAC to reach 0',
-      'drinks': 'Enter number of cups you had',
+      'drinks': 'Cups',
       'message': 'In every state of the United States it is illegal to drive with a BAC of 0.08 or higher.',
       'message2': 'Remember that this value is a close approximation. Do not drive under the influence of alcohol!',
       'warning': 'Must type something before procceding!',

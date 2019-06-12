@@ -23,6 +23,7 @@ dependencies:
     sdk: flutter
   firebase_admob: ^0.9.0+1
   url_launcher: ^5.0.3
+  http: ^0.12.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -40,6 +41,8 @@ dev_dependencies:
 flutter:
   assets:
     - assets/images/dontdrive.png
+    - assets/images/uber.png
+    - assets/images/beer.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
