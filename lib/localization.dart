@@ -14,7 +14,7 @@ class AppLocalization {
   static Map<String, Map<String, String>> _localizedValues = {
     'en': {
       'name': 'Name',
-      'title': 'Blood Alcohol Concentration',
+      'title': 'BAC',
       'weight': 'Weight (pounds)',
       'hours': 'Hours for BAC to reach 0',
       'drinks': 'Cups',

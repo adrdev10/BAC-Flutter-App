@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:baccalculator/beer_repository.dart';
+import 'package:flutter/painting.dart';
 
 import 'beer.dart';
 import 'package:baccalculator/localization.dart';
@@ -8,10 +9,10 @@ import 'package:flutter/services.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 void main() {
-  FirebaseAdMob.instance
-      .initialize(appId: 'ca-app-pub-1975185434500098~6499891872');
+  FirebaseAdMob.instance.initialize(appId: 'ca-app-pub-1975185434500098~6499891872');
   runApp(MaterialApp(
     theme: ThemeData(
       // primaryColor: Colors.blac,
@@ -36,7 +37,7 @@ void main() {
       '/': (context) => BacHomeScreen(),
       // '/second': (context) => BackResultsScreen(),
       '/settings': (context) => BackSettingsScreen(),
-      '/beerlist': (context) => BeerListScreen(),
+      // '/beerlist': (context) => BeerListScreen(),
     },
   ));
 }
@@ -50,79 +51,67 @@ class User {
   User({this.name, this.gender, this.numberofDrinks, this.wieght});
 }
 
-class BeerListScreen extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return _BeerListScreenState();
-  }
-}
+// class BeerList extends StatelessWidget {
 
-class _BeerListScreenState extends State<BeerListScreen> {
-  List<Beer> _beers = <Beer>[];
+//   BeerList({@required this.name, @required this.age, @required this.weight});
+//   final String name;
+//   final double weight;
+//   final int age;
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    listenForBeers();
-  }
+//   @override
+//   Widget build(BuildContext context) {
+//     // TODO: implement build
+//     return BeerListScreen();
+//   }
+// }
 
+// class BeerListScreen extends StatefulWidget {
+//   @override
+//   State<StatefulWidget> createState() {
+//     // TODO: implement createState
+//     return _BeerListScreenState();
+//   }
+// }
 
-  void listenForBeers() async {
-    final Stream<Beer> stream = await getBeers();
-    stream.listen((Beer beer) => {setState(() => _beers.add(beer))});
-  }
+// class _BeerListScreenState extends State<BeerListScreen> {
+//   List<Beer> _beers = <Beer>[];
 
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'BAC Calculator',
-        ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.settings),
-            onPressed: () {
-              Navigator.pushNamed(context, 'settings');
-            },
-          )
-        ],
-      ),
-      body: ListView.builder(
-        itemCount: _beers.length,
-        itemBuilder: (context, index) => BeerTite(_beers[index]),
-      ),
-    );
-  }
-}
+//   @override
+//   void initState() {
+//     // TODO: implement initState
+//     super.initState();
+//     listenForBeers();
+//   }
 
-class BeerTite extends StatelessWidget {
-  final Beer _beer;
-  BeerTite(this._beer);
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return Column(
-      children: <Widget>[
-        ListTile(
-          title: Text(_beer.name),
-          subtitle: Text(_beer.tagLine),
-          leading: Container(
-              margin: EdgeInsets.only(left: 6.0),
-              child: Image.network(
-                _beer.imageUrl,
-                height: 50.0,
-                fit: BoxFit.fill,
-              )),
-        ),
-        Divider()
-      ],
-    );
-  }
-}
+//   void listenForBeers() async {
+//     final Stream<Beer> stream = await getBeers();
+//     stream.listen((Beer beer) => {setState(() => _beers.add(beer))});
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     // TODO: implement build
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text(
+//           'BAC Calculator',
+//         ),
+//         actions: <Widget>[
+//           IconButton(
+//             icon: Icon(Icons.settings),
+//             onPressed: () {
+//               Navigator.pushNamed(context, 'settings');
+//             },
+//           )
+//         ],
+//       ),
+//       body: ListView.builder(
+//         itemCount: _beers.length,
+//         itemBuilder: (context, index) => BeerTite(_beers[index]),
+//       ),
+//     );
+//   }
+// }
 
 class BacHomeScreen extends StatefulWidget {
   @override
@@ -142,7 +131,7 @@ class _BackFormState extends State<BacHomeScreen>
   @override
   void initState() {
     // TODO: implement initState
-    
+
     super.initState();
     _height = 200;
     _matrix = Matrix4.translationValues(0, 0, 0);
@@ -177,7 +166,9 @@ class _BackFormState extends State<BacHomeScreen>
     print(myLocale.countryCode);
     return Scaffold(
         resizeToAvoidBottomPadding: false,
+        
         appBar: AppBar(
+          centerTitle: true,
           title: const Text(
             'BAC Calculator',
             style: TextStyle(fontSize: 17.0),
@@ -290,7 +281,8 @@ class _BackFormState extends State<BacHomeScreen>
                                   onTap: () {
                                     setState(() {
                                       _height = 0;
-                                      _matrix = Matrix4.translationValues(0, -50, 0);
+                                      _matrix =
+                                          Matrix4.translationValues(0, -50, 0);
                                     });
                                   },
                                   style: TextStyle(fontWeight: FontWeight.w300),
@@ -366,12 +358,91 @@ class _BackFormState extends State<BacHomeScreen>
   }
 }
 
+class DrunkRate {
+  String description1;
+  String description2;
+  String description3;
+  String rate;
+
+  DrunkRate({this.description1, this.description2, this.description3, this.rate});
+}
+
+class DrunkRateCard extends StatelessWidget {
+  final DrunkRate _drunkRate;
+  DrunkRateCard(this._drunkRate);
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      color: Colors.white70,
+      elevation: 10.0,
+      margin: EdgeInsets.symmetric(horizontal: 20.0),
+      child: Container(
+        padding: EdgeInsets.all(10.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25.0),
+          gradient: LinearGradient(
+            colors: [
+              Colors.blue[200],
+              Colors.blue[500],
+            ]
+          )
+        ),
+        width: 175.0,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Text('${_drunkRate.description1}'),
+            Text('${_drunkRate.description2}'),
+            Text('${_drunkRate.description3}'),
+            Text('${_drunkRate.rate}')
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class BackResultsScreen extends StatelessWidget {
   BackResultsScreen(
       {@required this.name, @required this.age, @required this.weight});
   final String name;
   final double weight;
   final int age;
+
+  List<DrunkRate> drunkList = <DrunkRate>[
+    new DrunkRate(
+      description1: 'Symptons',
+      description2: '- Feeling of well-being, inhibitations',
+      description3: '- Absence of obserable effects',
+      rate: '0.05 BAC',
+    ),
+    new DrunkRate(
+      description1: 'Symptons',
+      description2: '- Altered Emotions and behavior',
+      description3: '- Relaxation feelings and mild Sedetation',
+      rate: '0.08 BAC',
+    ),
+    new DrunkRate(
+      description1: 'Symptons',
+      description2: '- Muscle control impaired',
+      description3: '- Speech control impaired and uncoordinated behavior',
+      rate: '0.012 BAC',
+    ),
+    new DrunkRate(
+      description1: 'Symptons',
+      description2: '- Major impairment of physical function',
+      description3: '- Euphoria and difficulty standing',
+      rate: '0.015 BAC',
+    ),
+    new DrunkRate(
+      description1: 'Symptons',
+      description2: '- Lethal dosage and severe respiratory depression',
+      description3: '-Alcohol poisoning and severe circulatory depression',
+      rate: '0.35 BAC',
+    ),
+  ];
 
   String _getBac(double weight, int amountofDrinks) {
     var bac =
@@ -429,8 +500,6 @@ class BackResultsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-
-    var bac = _getBac(weight, age);
     myInterstitial
       ..load()
       ..show(
@@ -438,206 +507,140 @@ class BackResultsScreen extends StatelessWidget {
         anchorOffset: 0.0,
       );
 
+    var bac = _getBac(weight, age);
     Future.delayed(Duration.zero, () => _showDialog(context));
     return Scaffold(
+      
+        resizeToAvoidBottomPadding: false,
         appBar: AppBar(
+          centerTitle: true,
           title: Text(name),
         ),
-        body: Column(
-          children: <Widget>[
-            Container(
-                width: double.infinity,
-                height: 170.0,
-                child: Center(
-                  child: Stack(
-                    alignment: Alignment.center,
-                    overflow: Overflow.clip,
-                    children: <Widget>[
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Container(
-                                // top: 30,
-                                // left: 10,
-                                padding: const EdgeInsets.all(2.0),
-                                child: Container(
-                                  child: Text(
-                                    AppLocalization.of(context).get('title'),
-                                    style: TextStyle(
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.w200),
-                                  ),
+        body: Container(
+          height: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.white70,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Container(
+                  width: double.infinity,
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: <Widget>[
+                        Container(
+                            padding: const EdgeInsets.all(2.0),
+                            margin:
+                                const EdgeInsets.only(top: 15.0, bottom: 3.0),
+                            child: Container(
+                              child: Text(
+                                'Timer',
+                                style: TextStyle(
+                                    fontSize: 25.0,
+                                    fontWeight: FontWeight.w300,
+                                    color: Colors.grey),
+                              ),
+                            )),
+                        Container(
+                            padding: const EdgeInsets.all(2.0),
+                            margin:
+                                const EdgeInsets.only(top: 5.0, bottom: 30.0),
+                            child: Container(
+                              child: Text(
+                                "${(double.parse(bac) / 0.015).toStringAsFixed(2)} hrs",
+                                style: TextStyle(
+                                    fontSize: 20.0,
+                                    color: Colors.blue[400],
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            )),
+                        Column(children: <Widget>[
+                          new CircularPercentIndicator(
+                            backgroundColor: Colors.blue[500],
+                            progressColor: Colors.white,
+                            radius: 220.0,
+                            lineWidth: 15.0,
+                            circularStrokeCap: CircularStrokeCap.round,
+                            animation: true,
+                            animationDuration: 10200,
+                            percent: 0.4,
+                            center: new CircularPercentIndicator(
+                              backgroundColor: Colors.white,
+                              progressColor: Colors.blue[300],
+                              animationDuration: 10800,
+                              radius: 200.0,
+                              animation: true,
+                              lineWidth: 15.0,
+                              circularStrokeCap: CircularStrokeCap.round,
+                              percent: 0.8,
+                              center: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Container(
+                                        alignment: Alignment.center,
+                                        child: Container(
+                                          child: Text(
+                                            _getBac(weight, age),
+                                            style: TextStyle(
+                                                fontSize: 35.0,
+                                                color: Colors.blue[500],
+                                                fontWeight: FontWeight.w400),
+                                          ),
+                                        )),
+                                    Container(
+                                      alignment: Alignment.center,
+                                      child: Container(
+                                        child: Text(
+                                          AppLocalization.of(context)
+                                              .get('title'),
+                                          style: TextStyle(
+                                              fontSize: 15.0,
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.w300),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              Container(
-                                // top: 30,
-                                // right: 10,
-                                padding: const EdgeInsets.all(2.0),
-                                child: Container(
-                                  child: Text(
-                                    AppLocalization.of(context).get('hours'),
-                                    style: TextStyle(
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.w200),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: <Widget>[
-                              Container(
-                                  padding: const EdgeInsets.all(2.0),
-                                  margin: const EdgeInsets.only(top: 5.0),
-                                  child: Container(
-                                    child: Text(
-                                      _getBac(weight, age),
-                                      style: TextStyle(
-                                          fontSize: 45.0,
-                                          fontWeight: FontWeight.w300),
-                                    ),
-                                  )),
-                              Container(
-                                  padding: const EdgeInsets.all(2.0),
-                                  margin: const EdgeInsets.only(top: 5.0),
-                                  child: Container(
-                                    child: Text(
-                                      (double.parse(bac) / 0.015)
-                                          .toStringAsFixed(2),
-                                      style: TextStyle(
-                                          fontSize: 45.0,
-                                          fontWeight: FontWeight.w300),
-                                    ),
-                                  )),
-                            ],
+                            ),
                           ),
                           Container(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Container(
-                                  height: 45.0,
-                                  width: 150.0,
-                                  margin: const EdgeInsets.only(top: 35.0),
-                                  alignment: Alignment.center,
-                                  child: FlatButton(
+                            height: 45.0,
+                            width: 150.0,
+                            margin: const EdgeInsets.only(top: 15.0, bottom: 25.0),
+                            alignment: Alignment.center,
+                            child: FlatButton(
+                              onPressed: _launchURLUber,
+                              child: Row(
+                                children: <Widget>[
+                                  IconButton(
+                                    icon: Image.asset('assets/images/uber.png'),
+                                    tooltip: 'Uber',
+                                    // color: Colors.white,
                                     onPressed: _launchURLUber,
-                                    child: Row(
-                                      children: <Widget>[
-                                        IconButton(
-                                          icon: Image.asset(
-                                              'assets/images/uber.png'),
-                                          tooltip: 'Uber',
-                                          // color: Colors.white,
-                                          onPressed: _launchURLUber,
-                                        ),
-                                        Text('Get Uber')
-                                      ],
-                                    ),
                                   ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                    color: Colors.white,
-                                  ),
-                                )
-                                // Container(
-                                //   margin:
-                                //       const EdgeInsets.only(top: 35.0, left: 8.0),
-                                //   child: Align(
-                                //     alignment: Alignment(0.0, 1.5),
-                                //     child: FloatingActionButton(
-                                //       heroTag: "btn1",
-                                //       backgroundColor:
-                                //           Color.fromRGBO(145, 58, 127, 100),
-                                //       tooltip: 'Lift',
-                                //       child: Icon(Icons.directions_car),
-                                //       onPressed: _launchURLLift,
-                                //     ),
-                                //   ),
-                                // ),
-                              ],
+                                  Text('Get Uber')
+                                ],
+                              ),
                             ),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                )),
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                margin: const EdgeInsets.only(top: 30.0),
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      // Where the linear gradient begins and ends
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      // Add one stop for each color. Stops should increase from 0 to 1
-                      stops: [0.1, 0.9],
-                      colors: [
-                        // Colors are easy thanks to Flutter's Colors class.
-                        Colors.lightBlue[200],
-                        Colors.blue[700],
+                          ),
+                          Container(
+                              height: 200.0,
+                              child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: drunkList.length,
+                                  itemBuilder: (BuildContext context, int i) =>
+                                      DrunkRateCard(drunkList[i])))
+                        ]),
                       ],
                     ),
-                    color: Colors.blue[500],
-                    borderRadius: BorderRadiusDirectional.only(
-                      topEnd: Radius.circular(50.0),
-                      topStart: Radius.circular(50.0),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        offset: Offset(10.0, 10.0),
-                        blurRadius: 30.0,
-                      )
-                    ]),
-                child: ListView(
-                  padding: const EdgeInsets.all(10.0),
-                  children: <Widget>[
-                    ListTile(
-                      contentPadding: const EdgeInsets.all(12.0),
-                      leading: Icon(Icons.blur_circular),
-                      title: Text(AppLocalization.of(context).get('list1')),
-                      trailing: Text('0.05'),
-                    ),
-                    ListTile(
-                      contentPadding: const EdgeInsets.all(12.0),
-                      leading: Icon(Icons.blur_circular),
-                      title: Text(AppLocalization.of(context).get('list2')),
-                      trailing: Text('0.08'),
-                    ),
-                    ListTile(
-                      contentPadding: const EdgeInsets.all(12.0),
-                      leading: Icon(Icons.blur_circular),
-                      title: Text(AppLocalization.of(context).get('list3')),
-                      trailing: Text('0.12'),
-                    ),
-                    ListTile(
-                      contentPadding: const EdgeInsets.all(12.0),
-                      leading: Icon(Icons.blur_circular),
-                      title: Text(AppLocalization.of(context).get('list4')),
-                      trailing: Text('0.15'),
-                    ),
-                    ListTile(
-                      contentPadding: const EdgeInsets.all(12.0),
-                      leading: Icon(Icons.blur_circular),
-                      title: Text(AppLocalization.of(context).get('list5')),
-                      trailing: Text('0.35'),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
+                  )),
+            ],
+          ),
         ));
   }
 }
@@ -661,7 +664,8 @@ MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
     'night',
     'nobeer',
     'calculator',
-    'bac'
+    'bac',
+    'beer'
   ],
   contentUrl: 'https://flutter.io',
   birthday: DateTime.now(),
