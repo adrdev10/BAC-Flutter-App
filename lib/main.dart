@@ -155,12 +155,6 @@ class _BackFormState extends State<BacHomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    myBanner
-      ..load()
-      ..show(
-        anchorType: AnchorType.bottom,
-        anchorOffset: 0.0,
-      );
     // TODO: implement build
     Locale myLocale = Localizations.localeOf(context);
     print(myLocale.countryCode);
@@ -500,6 +494,7 @@ class BackResultsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+
     myInterstitial
       ..load()
       ..show(
@@ -659,13 +654,6 @@ MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
     'games',
     'sport',
     'drinks',
-    'fun',
-    'drive',
-    'night',
-    'nobeer',
-    'calculator',
-    'bac',
-    'beer'
   ],
   contentUrl: 'https://flutter.io',
   birthday: DateTime.now(),
@@ -676,23 +664,13 @@ MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
   testDevices: <String>[], // Android emulators are considered test devices
 );
 
-BannerAd myBanner = BannerAd(
-  // Replace the testAdUnitId with an ad unit id from the AdMob dash.
-  // https://developers.google.com/admob/android/test-ads
-  // https://developers.google.com/admob/ios/test-ads
-  adUnitId: 'ca-app-pub-1975185434500098/2490873415',
-  size: AdSize.smartBanner,
-  targetingInfo: targetingInfo,
-  listener: (MobileAdEvent event) {
-    print("BannerAd event is $event");
-  },
-);
 
 InterstitialAd myInterstitial = InterstitialAd(
   // Replace the testAdUnitId with an ad unit id from the AdMob dash.
   // https://developers.google.com/admob/android/test-ads
   // https://developers.google.com/admob/ios/test-ads
-  adUnitId: 'ca-app-pub-1975185434500098/1602788415',
+  //Enter UnitId here
+  adUnitId: '' ,
   targetingInfo: targetingInfo,
   listener: (MobileAdEvent event) {
     print("InterstitialAd event is $event");
