@@ -12,7 +12,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 void main() {
-  FirebaseAdMob.instance.initialize(appId: 'ca-app-pub-1975185434500098~6499891872');
+  //Enter appid here
+  FirebaseAdMob.instance.initialize(appId: '');
+  
   runApp(MaterialApp(
     theme: ThemeData(
       // primaryColor: Colors.blac,
@@ -50,68 +52,6 @@ class User {
 
   User({this.name, this.gender, this.numberofDrinks, this.wieght});
 }
-
-// class BeerList extends StatelessWidget {
-
-//   BeerList({@required this.name, @required this.age, @required this.weight});
-//   final String name;
-//   final double weight;
-//   final int age;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     // TODO: implement build
-//     return BeerListScreen();
-//   }
-// }
-
-// class BeerListScreen extends StatefulWidget {
-//   @override
-//   State<StatefulWidget> createState() {
-//     // TODO: implement createState
-//     return _BeerListScreenState();
-//   }
-// }
-
-// class _BeerListScreenState extends State<BeerListScreen> {
-//   List<Beer> _beers = <Beer>[];
-
-//   @override
-//   void initState() {
-//     // TODO: implement initState
-//     super.initState();
-//     listenForBeers();
-//   }
-
-//   void listenForBeers() async {
-//     final Stream<Beer> stream = await getBeers();
-//     stream.listen((Beer beer) => {setState(() => _beers.add(beer))});
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     // TODO: implement build
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text(
-//           'BAC Calculator',
-//         ),
-//         actions: <Widget>[
-//           IconButton(
-//             icon: Icon(Icons.settings),
-//             onPressed: () {
-//               Navigator.pushNamed(context, 'settings');
-//             },
-//           )
-//         ],
-//       ),
-//       body: ListView.builder(
-//         itemCount: _beers.length,
-//         itemBuilder: (context, index) => BeerTite(_beers[index]),
-//       ),
-//     );
-//   }
-// }
 
 class BacHomeScreen extends StatefulWidget {
   @override
